@@ -9,9 +9,10 @@ public class Airplane {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
+    @Column(unique = true)
     private String factorySerialNumber;
-    @OneToOne
-    @JoinColumn(referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id", name = "air_company_id", foreignKey = @ForeignKey(name = "FK_Airplane_AirCompanyID_AirCompany_ID"))
     private AirCompany airCompanyId;
     private Integer numberOfFlights;
     private Integer flightDistance;

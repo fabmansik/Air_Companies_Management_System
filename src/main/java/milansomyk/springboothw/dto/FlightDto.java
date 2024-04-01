@@ -4,8 +4,22 @@ import milansomyk.springboothw.entity.AirCompany;
 import milansomyk.springboothw.entity.Airplane;
 
 import java.util.Date;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public class FlightDto {
+    private Integer id;
+    private String flightStatus;
+    private AirCompany airCompanyId;
+    private Airplane airplaneId;
+    private String departureCountry;
+    private String destinationCountry;
+    private Integer distance;
+    private Integer estimatedFlightTime;
+    private Date startedAt;
+    private Date endedAt;
+    private Date delayStartedAt;
+    private Date createdAt;
     public FlightDto() {
     }
 
@@ -119,17 +133,9 @@ public class FlightDto {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
+    public boolean allNull() {
+        return Stream.of(id, flightStatus, airCompanyId, airplaneId, departureCountry, destinationCountry, distance, estimatedFlightTime, startedAt, endedAt, delayStartedAt, createdAt)
+                .allMatch(Objects::isNull);
+    }
 
-    private Integer id;
-    private String flightStatus;
-    private AirCompany airCompanyId;
-    private Airplane airplaneId;
-    private String departureCountry;
-    private String destinationCountry;
-    private Integer distance;
-    private Integer estimatedFlightTime;
-    private Date startedAt;
-    private Date endedAt;
-    private Date delayStartedAt;
-    private Date createdAt;
 }

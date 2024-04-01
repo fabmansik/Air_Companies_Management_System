@@ -1,7 +1,9 @@
 package milansomyk.springboothw.service;
 
+import milansomyk.springboothw.dto.AirCompanyDto;
 import milansomyk.springboothw.dto.AirplaneDto;
 import milansomyk.springboothw.dto.ResponseContainer;
+import milansomyk.springboothw.entity.AirCompany;
 import milansomyk.springboothw.entity.Airplane;
 import milansomyk.springboothw.mapper.AirplaneMapper;
 import milansomyk.springboothw.repository.AirCompanyRepository;
@@ -14,20 +16,27 @@ import org.springframework.util.ObjectUtils;
 public class AirplaneService {
     private final AirplaneRepository airplaneRepository;
     private final AirplaneMapper airplaneMapper;
-    public AirplaneService(AirplaneRepository airplaneRepository, AirplaneMapper airplaneMapper){
+    private final AirCompanyRepository airCompanyRepository;
+    public AirplaneService(AirplaneRepository airplaneRepository, AirplaneMapper airplaneMapper, AirCompanyRepository airCompanyRepository){
         this.airplaneRepository = airplaneRepository;
         this.airplaneMapper = airplaneMapper;
+        this.airCompanyRepository = airCompanyRepository;
     }
     //in progress...
-    public ResponseContainer createPlane(int id, AirplaneDto airplaneDto){
+    public ResponseContainer createPlane(Integer id, AirplaneDto airplaneDto){
         ResponseContainer responseContainer = new ResponseContainer();
         if(airplaneDto.allNull()){
             return responseContainer.setErrorMessageAndStatusCode("airplane is empty",HttpStatus.BAD_REQUEST.value());
         }
         if(!ObjectUtils.isEmpty(id)){
-//            AirCompany airCompany = airCompanyRepository.findById(id).orElse(null);
-//            airplaneDto.setAirCompanyId(airCompany);
-            airplaneRepository.saveWithCompany(id, airplaneDto.getName(), airplaneDto.getFactorySerialNumber(), airplaneDto.getNumberOfFlights(), airplaneDto.getFlightDistance(), airplaneDto.getFuelCapacity(), airplaneDto.getType(), airplaneDto.getCreatedAt());
+            AirCompany found;
+            try{
+                found = airCompanyRepository.findById(id).orElse(null);
+            } catch (Exception e){
+                return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR.value());
+            }
+            if(ObjectUtils.isEmpty(found)) return responseContainer.setErrorMessageAndStatusCode("company not found",HttpStatus.BAD_REQUEST.value());
+            airplaneDto.setAirCompanyId(found);
         }
         Airplane saved;
         try {

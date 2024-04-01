@@ -15,7 +15,7 @@ public class AirplaneController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseContainer> createPlane(@RequestParam(required = false) int companyId, @RequestBody AirplaneDto airplaneDto){
+    public ResponseEntity<ResponseContainer> createPlane(@RequestParam(required = false) Integer companyId, @RequestBody AirplaneDto airplaneDto){
         ResponseContainer responseContainer = airplaneService.createPlane(companyId, airplaneDto);
         return ResponseEntity.status(responseContainer.getStatusCode()).body(responseContainer);
     }

@@ -3,6 +3,7 @@ package milansomyk.springboothw.entity;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 public class Flight {
@@ -10,11 +11,11 @@ public class Flight {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String flightStatus;
-    @OneToOne
-    @JoinColumn(referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id", name = "air_company_id", foreignKey = @ForeignKey(name = "FK_Flight_AirCompanyID_AirCompany_ID"))
     private AirCompany airCompanyId;
-    @OneToOne
-    @JoinColumn(referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id", name = "airplane_id", foreignKey = @ForeignKey(name = "FK_Flight_AirplaneID_Airplane_ID"))
     private Airplane airplaneId;
     private String departureCountry;
     private String destinationCountry;
