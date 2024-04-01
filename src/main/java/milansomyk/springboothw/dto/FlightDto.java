@@ -1,30 +1,27 @@
-package milansomyk.springboothw.entity;
+package milansomyk.springboothw.dto;
 
-import jakarta.persistence.*;
+import milansomyk.springboothw.entity.AirCompany;
+import milansomyk.springboothw.entity.Airplane;
 
 import java.util.Date;
 
-@Entity
-public class Flight {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String flightStatus;
-    @OneToOne
-    @JoinColumn(referencedColumnName = "id")
-    private AirCompany airCompanyId;
-    @OneToOne
-    @JoinColumn(referencedColumnName = "id")
-    private Airplane airplaneId;
-    private String departureCountry;
-    private String destinationCountry;
-    private Integer distance;
-    private Integer estimatedFlightTime;
-    private Date startedAt;
-    private Date endedAt;
-    private Date delayStartedAt;
-    private Date createdAt;
-    public Flight() {
+public class FlightDto {
+    public FlightDto() {
+    }
+
+    public FlightDto(Integer id, String flightStatus, AirCompany airCompanyId, Airplane airplaneId, String departureCountry, String destinationCountry, Integer distance, Integer estimatedFlightTime, Date startedAt, Date endedAt, Date delayStartedAt, Date createdAt) {
+        this.id = id;
+        this.flightStatus = flightStatus;
+        this.airCompanyId = airCompanyId;
+        this.airplaneId = airplaneId;
+        this.departureCountry = departureCountry;
+        this.destinationCountry = destinationCountry;
+        this.distance = distance;
+        this.estimatedFlightTime = estimatedFlightTime;
+        this.startedAt = startedAt;
+        this.endedAt = endedAt;
+        this.delayStartedAt = delayStartedAt;
+        this.createdAt = createdAt;
     }
 
     public Integer getId() {
@@ -123,20 +120,16 @@ public class Flight {
         this.createdAt = createdAt;
     }
 
-    public Flight(Integer id, String flightStatus, AirCompany airCompanyId, Airplane airplaneId, String departureCountry, String destinationCountry, Integer distance, Integer estimatedFlightTime, Date startedAt, Date endedAt, Date delayStartedAt, Date createdAt) {
-        this.id = id;
-        this.flightStatus = flightStatus;
-        this.airCompanyId = airCompanyId;
-        this.airplaneId = airplaneId;
-        this.departureCountry = departureCountry;
-        this.destinationCountry = destinationCountry;
-        this.distance = distance;
-        this.estimatedFlightTime = estimatedFlightTime;
-        this.startedAt = startedAt;
-        this.endedAt = endedAt;
-        this.delayStartedAt = delayStartedAt;
-        this.createdAt = createdAt;
-    }
-
-
+    private Integer id;
+    private String flightStatus;
+    private AirCompany airCompanyId;
+    private Airplane airplaneId;
+    private String departureCountry;
+    private String destinationCountry;
+    private Integer distance;
+    private Integer estimatedFlightTime;
+    private Date startedAt;
+    private Date endedAt;
+    private Date delayStartedAt;
+    private Date createdAt;
 }

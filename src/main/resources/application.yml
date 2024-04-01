@@ -1,27 +1,9 @@
 spring:
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
   jpa:
     generate-ddl: true
+    hibernate:
+      ddl-auto: update
   datasource:
-    url: jdbc:mysql://localhost:3306/auto-ria?createIfNotExist=true
+    url: jdbc:mysql://localhost:3306/air_companies_management?createIfNotExist=true
     username: root
     password: root
-  mail:
-    host: smtp.gmail.com
-    username: milansomyk@gmail.com
-    password: vapcnbuemszhqbfe
-    properties:
-        mail:
-          smtp:
-            auth: true
-            starttls:
-              enable: true
-  mvc:
-    throw-exception-if-no-handler-found: true
-  web:
-    resources:
-      add-mappings: false
-
