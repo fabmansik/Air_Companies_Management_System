@@ -4,8 +4,6 @@ import milansomyk.springboothw.dto.AirCompanyDto;
 import milansomyk.springboothw.dto.AirplaneDto;
 import milansomyk.springboothw.dto.FlightDto;
 import milansomyk.springboothw.dto.ResponseContainer;
-import milansomyk.springboothw.entity.AirCompany;
-import milansomyk.springboothw.entity.Airplane;
 import milansomyk.springboothw.entity.Flight;
 import milansomyk.springboothw.enums.FlightStatus;
 import milansomyk.springboothw.mapper.FlightMapper;
@@ -15,10 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDate;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -146,6 +143,19 @@ public class FlightService {
             return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
         List<FlightDto> list = flightsList.stream().map(flightMapper::toDto).toList();
+        return responseContainer.setSuccessResult(list);
+    }
+    public ResponseContainer getCompletedAndTimeUnderratedFlights(){
+        ResponseContainer responseContainer = new ResponseContainer();
+        List<Flight> completedFlights;
+        try {
+            completedFlights = flightRepository.getCompletedFlights();
+        } catch (Exception e){
+            return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
+        List<Flight> list = completedFlights.stream()
+                .filter(f -> f.getEstimatedFlightTime() < Duration.between(f.getCreatedAt(), f.getEndedAt()).toSeconds())
+                .toList();
         return responseContainer.setSuccessResult(list);
     }
 }

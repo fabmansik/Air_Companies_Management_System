@@ -35,4 +35,9 @@ public class FlightController {
         ResponseContainer responseContainer = flightService.getAllFlightsByStatus(status);
         return ResponseEntity.status(responseContainer.getStatusCode()).body(responseContainer);
     }
+    @GetMapping("/timeUnderrated")
+    public ResponseEntity<ResponseContainer> getAllTimeUnderratedFlights(){
+        ResponseContainer responseContainer = flightService.getCompletedAndTimeUnderratedFlights();
+        return ResponseEntity.status(responseContainer.getStatusCode()).body(responseContainer);
+    }
 }

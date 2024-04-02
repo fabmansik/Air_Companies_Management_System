@@ -18,4 +18,6 @@ public interface FlightRepository extends JpaRepository<Flight, Integer> {
     @Query(nativeQuery = true, value = "SELECT flight.*, air_company.name FROM flight INNER JOIN air_company ON air_company.id = flight.air_company_id WHERE flight.flight_status = :flightStatus AND air_company.name= :companyName")
     List<Flight> getFlightsByCompanyNameAndFlightStatus(String companyName, String flightStatus);
     List<Flight> getFlightsByFlightStatus(FlightStatus flightStatus);
+    @Query(nativeQuery = true, value = "SELECT * FROM flight WHERE flight_status = 'COMPLETED'")
+    List<Flight> getCompletedFlights();
 }
