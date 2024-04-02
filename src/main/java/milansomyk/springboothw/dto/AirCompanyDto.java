@@ -1,10 +1,13 @@
 package milansomyk.springboothw.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 public class AirCompanyDto {
+    @JsonIgnore
     private Integer id;
     private String name;
     private String companyType;

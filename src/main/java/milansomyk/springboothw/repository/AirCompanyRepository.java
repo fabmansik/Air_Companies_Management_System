@@ -7,10 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public interface AirCompanyRepository extends JpaRepository<AirCompany,Integer> {
+    Optional<AirCompany> findByName(String name);
     @Modifying
     @Transactional
-    @Query(nativeQuery = true, value = "update air_company set name = ifNull(:name, name), company_type = ifNull(:companyType, company_type), founded_at = ifNull(:foundedAt,founded_at) where id = :id")
+    @Query(nativeQuery = true, value = "UPDATE air_company SET name = ifNull(:name, name), company_type = ifNull(:companyType, company_type), founded_at = ifNull(:foundedAt,founded_at) where id = :id")
     Integer updateAirCompanyById(int id, String name, String companyType, LocalDate foundedAt);
 }

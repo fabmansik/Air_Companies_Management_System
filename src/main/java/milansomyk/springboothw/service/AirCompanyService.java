@@ -30,18 +30,18 @@ public class AirCompanyService {
         List<AirCompanyDto> mappedList = companies.stream().map(airCompanyMapper::toDto).toList();
         return responseContainer.setSuccessResult(mappedList);
     }
-    public ResponseContainer getById(int id){
+    public ResponseContainer getByName(String name){
         ResponseContainer responseContainer = new ResponseContainer();
-        AirCompany foundCompany;
-        try {
-            foundCompany = airCompanyRepository.findById(id).orElse(null);
+        AirCompany airCompany;
+        try{
+            airCompany = airCompanyRepository.findByName(name).orElse(null);
         } catch (Exception e){
             return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
-        if(ObjectUtils.isEmpty(foundCompany)){
-            return responseContainer.setErrorMessageAndStatusCode("company not found",HttpStatus.BAD_REQUEST.value());
+        if(ObjectUtils.isEmpty(airCompany)){
+            return responseContainer.setErrorMessageAndStatusCode("company by this name not found!", HttpStatus.BAD_REQUEST.value());
         }
-        return responseContainer.setSuccessResult(airCompanyMapper.toDto(foundCompany));
+        return responseContainer.setSuccessResult(airCompanyMapper.toDto(airCompany));
     }
     public ResponseContainer createAirCompany(AirCompanyDto airCompanyDto){
         ResponseContainer responseContainer = new ResponseContainer();

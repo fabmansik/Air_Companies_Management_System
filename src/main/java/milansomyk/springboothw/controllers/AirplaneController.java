@@ -15,8 +15,13 @@ public class AirplaneController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseContainer> createPlane(@RequestParam(required = false) Integer companyId, @RequestBody AirplaneDto airplaneDto){
-        ResponseContainer responseContainer = airplaneService.createPlane(companyId, airplaneDto);
+    public ResponseEntity<ResponseContainer> createPlane(@RequestParam(required = false) String companyName, @RequestBody AirplaneDto airplaneDto){
+        ResponseContainer responseContainer = airplaneService.createPlane(companyName, airplaneDto);
+        return ResponseEntity.status(responseContainer.getStatusCode()).body(responseContainer);
+    }
+    @PutMapping
+    public ResponseEntity<ResponseContainer> movePlane(@RequestParam String companyName, @RequestParam String serialNum){
+        ResponseContainer responseContainer = airplaneService.movePlane(companyName, serialNum);
         return ResponseEntity.status(responseContainer.getStatusCode()).body(responseContainer);
     }
 }

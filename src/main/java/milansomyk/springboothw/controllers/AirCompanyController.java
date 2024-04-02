@@ -20,11 +20,12 @@ public class AirCompanyController {
         ResponseContainer responseContainer = airCompanyService.getAll();
         return ResponseEntity.status(responseContainer.getStatusCode()).body(responseContainer);
     }
-    @GetMapping(params = "id")
-    public ResponseEntity<ResponseContainer> getAirCompanyById(@RequestParam int id){
-        ResponseContainer responseContainer = airCompanyService.getById(id);
+    @GetMapping(params = "name")
+    public ResponseEntity<ResponseContainer> getAirCompanyById(@RequestParam String name){
+        ResponseContainer responseContainer = airCompanyService.getByName(name);
         return ResponseEntity.status(responseContainer.getStatusCode()).body(responseContainer);
     }
+
     @PostMapping
     public ResponseEntity<ResponseContainer> createAirCompany(@RequestBody AirCompanyDto airCompanyDto){
         ResponseContainer responseContainer = airCompanyService.createAirCompany(airCompanyDto);

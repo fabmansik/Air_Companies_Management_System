@@ -1,29 +1,36 @@
 package milansomyk.springboothw.dto;
 
-import milansomyk.springboothw.entity.AirCompany;
-import milansomyk.springboothw.entity.Airplane;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import milansomyk.springboothw.dto.AirCompanyDto;
+import milansomyk.springboothw.dto.AirplaneDto;
+import milansomyk.springboothw.enums.FlightStatus;
 
-import java.util.Date;
+import java.lang.Integer;
+import java.time.LocalDateTime;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 public class FlightDto {
     private Integer id;
-    private String flightStatus;
-    private AirCompany airCompanyId;
-    private Airplane airplaneId;
+    @Enumerated(EnumType.STRING)
+    private FlightStatus flightStatus;
+    private AirCompanyDto airCompanyId;
+    private AirplaneDto airplaneId;
     private String departureCountry;
     private String destinationCountry;
     private Integer distance;
     private Integer estimatedFlightTime;
-    private Date startedAt;
-    private Date endedAt;
-    private Date delayStartedAt;
-    private Date createdAt;
+    private LocalDateTime startedAt;
+    private LocalDateTime endedAt;
+    private LocalDateTime delayStartedAt;
+    private LocalDateTime createdAt;
     public FlightDto() {
     }
 
-    public FlightDto(Integer id, String flightStatus, AirCompany airCompanyId, Airplane airplaneId, String departureCountry, String destinationCountry, Integer distance, Integer estimatedFlightTime, Date startedAt, Date endedAt, Date delayStartedAt, Date createdAt) {
+    public FlightDto(Integer id, FlightStatus flightStatus, AirCompanyDto airCompanyId, AirplaneDto airplaneId, String departureCountry, String destinationCountry, Integer distance, Integer estimatedFlightTime, LocalDateTime startedAt, LocalDateTime endedAt, LocalDateTime delayStartedAt, LocalDateTime createdAt) {
         this.id = id;
         this.flightStatus = flightStatus;
         this.airCompanyId = airCompanyId;
@@ -46,27 +53,27 @@ public class FlightDto {
         this.id = id;
     }
 
-    public String getFlightStatus() {
+    public FlightStatus getFlightStatus() {
         return flightStatus;
     }
 
-    public void setFlightStatus(String flightStatus) {
+    public void setFlightStatus(FlightStatus flightStatus) {
         this.flightStatus = flightStatus;
     }
 
-    public AirCompany getAirCompanyId() {
+    public AirCompanyDto getAirCompanyId() {
         return airCompanyId;
     }
 
-    public void setAirCompanyId(AirCompany airCompanyId) {
+    public void setAirCompanyId(AirCompanyDto airCompanyId) {
         this.airCompanyId = airCompanyId;
     }
 
-    public Airplane getAirplaneId() {
+    public AirplaneDto getAirplaneDtoId() {
         return airplaneId;
     }
 
-    public void setAirplaneId(Airplane airplaneId) {
+    public void setAirplaneDtoId(AirplaneDto airplaneId) {
         this.airplaneId = airplaneId;
     }
 
@@ -102,35 +109,35 @@ public class FlightDto {
         this.estimatedFlightTime = estimatedFlightTime;
     }
 
-    public Date getStartedAt() {
+    public LocalDateTime getStartedAt() {
         return startedAt;
     }
 
-    public void setStartedAt(Date startedAt) {
+    public void setStartedAt(LocalDateTime startedAt) {
         this.startedAt = startedAt;
     }
 
-    public Date getEndedAt() {
+    public LocalDateTime getEndedAt() {
         return endedAt;
     }
 
-    public void setEndedAt(Date endedAt) {
+    public void setEndedAt(LocalDateTime endedAt) {
         this.endedAt = endedAt;
     }
 
-    public Date getDelayStartedAt() {
+    public LocalDateTime getDelayStartedAt() {
         return delayStartedAt;
     }
 
-    public void setDelayStartedAt(Date delayStartedAt) {
+    public void setDelayStartedAt(LocalDateTime delayStartedAt) {
         this.delayStartedAt = delayStartedAt;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
     public boolean allNull() {

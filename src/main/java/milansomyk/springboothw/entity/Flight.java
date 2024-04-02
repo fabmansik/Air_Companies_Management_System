@@ -1,16 +1,21 @@
 package milansomyk.springboothw.entity;
 
 import jakarta.persistence.*;
+import milansomyk.springboothw.enums.FlightStatus;
 
-import java.util.Date;
-import java.util.UUID;
+import java.lang.Integer;
+import java.time.LocalDateTime;
+import java.time.LocalDateTime;
+import java.time.LocalDateTime;
 
 @Entity
 public class Flight {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String flightStatus;
+    @Column(length = 10)
+    @Enumerated(EnumType.STRING)
+    private FlightStatus flightStatus;
     @ManyToOne
     @JoinColumn(referencedColumnName = "id", name = "air_company_id", foreignKey = @ForeignKey(name = "FK_Flight_AirCompanyID_AirCompany_ID"))
     private AirCompany airCompanyId;
@@ -21,10 +26,11 @@ public class Flight {
     private String destinationCountry;
     private Integer distance;
     private Integer estimatedFlightTime;
-    private Date startedAt;
-    private Date endedAt;
-    private Date delayStartedAt;
-    private Date createdAt;
+    private LocalDateTime startedAt;
+    private LocalDateTime endedAt;
+    private LocalDateTime delayStartedAt;
+    private LocalDateTime createdAt;
+
     public Flight() {
     }
 
@@ -36,11 +42,11 @@ public class Flight {
         this.id = id;
     }
 
-    public String getFlightStatus() {
+    public FlightStatus getFlightStatus() {
         return flightStatus;
     }
 
-    public void setFlightStatus(String flightStatus) {
+    public void setFlightStatus(FlightStatus flightStatus) {
         this.flightStatus = flightStatus;
     }
 
@@ -92,39 +98,39 @@ public class Flight {
         this.estimatedFlightTime = estimatedFlightTime;
     }
 
-    public Date getStartedAt() {
+    public LocalDateTime getStartedAt() {
         return startedAt;
     }
 
-    public void setStartedAt(Date startedAt) {
+    public void setStartedAt(LocalDateTime startedAt) {
         this.startedAt = startedAt;
     }
 
-    public Date getEndedAt() {
+    public LocalDateTime getEndedAt() {
         return endedAt;
     }
 
-    public void setEndedAt(Date endedAt) {
+    public void setEndedAt(LocalDateTime endedAt) {
         this.endedAt = endedAt;
     }
 
-    public Date getDelayStartedAt() {
+    public LocalDateTime getDelayStartedAt() {
         return delayStartedAt;
     }
 
-    public void setDelayStartedAt(Date delayStartedAt) {
+    public void setDelayStartedAt(LocalDateTime delayStartedAt) {
         this.delayStartedAt = delayStartedAt;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Flight(Integer id, String flightStatus, AirCompany airCompanyId, Airplane airplaneId, String departureCountry, String destinationCountry, Integer distance, Integer estimatedFlightTime, Date startedAt, Date endedAt, Date delayStartedAt, Date createdAt) {
+    public Flight(Integer id, FlightStatus flightStatus, AirCompany airCompanyId, Airplane airplaneId, String departureCountry, String destinationCountry, Integer distance, Integer estimatedFlightTime, LocalDateTime startedAt, LocalDateTime endedAt, LocalDateTime delayStartedAt, LocalDateTime createdAt) {
         this.id = id;
         this.flightStatus = flightStatus;
         this.airCompanyId = airCompanyId;

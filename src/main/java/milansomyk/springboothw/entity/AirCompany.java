@@ -1,23 +1,29 @@
 package milansomyk.springboothw.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.time.LocalDate;
+
 @Entity
 public class AirCompany {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(unique = true)
     private String name;
     private String companyType;
     private LocalDate foundedAt;
-    public AirCompany(AirCompany airCompany){
+
+    public AirCompany(AirCompany airCompany) {
         this.id = airCompany.id;
         this.companyType = airCompany.companyType;
         this.foundedAt = airCompany.foundedAt;
         this.name = airCompany.name;
     }
-    public AirCompany(){}
+
+    public AirCompany() {
+    }
 
     public Integer getId() {
         return id;
@@ -57,7 +63,5 @@ public class AirCompany {
         this.companyType = companyType;
         this.foundedAt = foundedAt;
     }
-
-
 
 }

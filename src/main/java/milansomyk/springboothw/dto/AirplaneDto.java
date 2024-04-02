@@ -1,23 +1,25 @@
 package milansomyk.springboothw.dto;
 
-import milansomyk.springboothw.entity.AirCompany;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import milansomyk.springboothw.dto.AirCompanyDto;
 
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 public class AirplaneDto {
+    @JsonIgnore
     private Integer id;
     private String name;
     private String factorySerialNumber;
-    private AirCompany airCompanyId;
+    private AirCompanyDto airCompanyId;
     private Integer numberOfFlights;
     private Integer flightDistance;
     private Integer fuelCapacity;
     private String type;
     private LocalDate createdAt;
 
-    public AirplaneDto(Integer id, String name, String factorySerialNumber, AirCompany airCompanyId, Integer numberOfFlights, Integer flightDistance, Integer fuelCapacity, String type, LocalDate createdAt) {
+    public AirplaneDto(Integer id, String name, String factorySerialNumber, AirCompanyDto airCompanyId, Integer numberOfFlights, Integer flightDistance, Integer fuelCapacity, String type, LocalDate createdAt) {
         this.id = id;
         this.name = name;
         this.factorySerialNumber = factorySerialNumber;
@@ -59,11 +61,11 @@ public class AirplaneDto {
         this.factorySerialNumber = factorySerialNumber;
     }
 
-    public AirCompany getAirCompanyId() {
+    public AirCompanyDto getAirCompanyId() {
         return airCompanyId;
     }
 
-    public void setAirCompanyId(AirCompany airCompanyId) {
+    public void setAirCompanyId(AirCompanyDto airCompanyId) {
         this.airCompanyId = airCompanyId;
     }
 
