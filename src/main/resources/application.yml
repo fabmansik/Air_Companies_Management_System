@@ -6,6 +6,6 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:mysql://localhost:3306/air_companies_management?createIfNotExist=true
-    username: root
+    url: jdbc:mysql://db:3306/air_companies_management?createIfNotExist=true
+    username: admin
     password: root
