@@ -28,20 +28,17 @@ public class FlightService {
     private final AirplaneService airplaneService;
     private final AirCompanyService airCompanyService;
 
-    public ResponseContainer addFlight(String companyName, String planeSerialNum, FlightDto flightDto) {
+    public ResponseContainer addFlight(String planeSerialNum, FlightDto flightDto) {
         ResponseContainer responseContainer = new ResponseContainer();
         if (flightDto.anyRequiredIsNull()) {
             log.error("Not enough info about Flight!");
             return responseContainer.setErrorMessageAndStatusCode("Not enough info about Flight!", HttpStatus.BAD_REQUEST.value());
         }
-        if (!StringUtils.hasText(companyName)) {
-            log.error("Given AirCompany name is null!");
-            return responseContainer.setErrorMessageAndStatusCode("Given AirCompany name is null!", HttpStatus.BAD_REQUEST.value());
-        }
         if (!StringUtils.hasText(planeSerialNum)) {
             log.error("Give Airplane serial number is null!");
             return responseContainer.setErrorMessageAndStatusCode("Give Airplane serial number is null!", HttpStatus.BAD_REQUEST.value());
         }
+
         AirplaneDto foundAirplane;
         try {
             foundAirplane = airplaneService.getAirplaneDtoBySerialNumber(planeSerialNum);
@@ -52,18 +49,13 @@ public class FlightService {
             log.error(e.getMessage());
             return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
-        AirCompanyDto foundAirCompany;
-        try {
-            foundAirCompany = airCompanyService.getAirCompanyByName(companyName);
-        } catch (IllegalArgumentException e){
-            log.error(e.getMessage());
-            return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.BAD_REQUEST.value());
-        } catch (Exception e){
-            log.error(e.getMessage());
-            return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR.value());
-        }
 
-        flightDto.setAirCompanyId(foundAirCompany);
+        AirCompanyDto foundCompanyDto = foundAirplane.getAirCompanyId();
+        if(ObjectUtils.isEmpty(foundCompanyDto)){
+            log.error("Airplane without AirCompany can`t be used in Flight!");
+            return responseContainer.setErrorMessageAndStatusCode("Airplane without AirCompany can`t be used in Flight!", HttpStatus.BAD_REQUEST.value());
+        }
+        flightDto.setAirCompanyId(foundCompanyDto);
         flightDto.setAirplaneId(foundAirplane);
         flightDto.setCreatedAt(LocalDateTime.now());
         flightDto.setFlightStatus(FlightStatus.PENDING);
@@ -194,8 +186,8 @@ public class FlightService {
             log.error(e.getMessage());
             return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
-        List<Flight> list = completedFlights.stream()
-                .filter(f -> f.getEstimatedFlightTime() < Duration.between(f.getCreatedAt(), f.getEndedAt()).toSeconds())
+        List<FlightDto> list = completedFlights.stream()
+                .filter(f -> f.getEstimatedFlightTime() < Duration.between(f.getCreatedAt(), f.getEndedAt()).toSeconds()).map(flightMapper::toDto)
                 .toList();
         return responseContainer.setSuccessResult(list);
     }

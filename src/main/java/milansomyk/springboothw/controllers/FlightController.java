@@ -16,8 +16,8 @@ public class FlightController {
         this.flightService = flightService;
     }
     @PostMapping
-    public ResponseEntity<ResponseContainer> createFlight(@RequestParam String companyName, @RequestParam String planeSerialNum, @RequestBody FlightDto flightDto){
-        ResponseContainer responseContainer = flightService.addFlight(companyName, planeSerialNum, flightDto);
+    public ResponseEntity<ResponseContainer> createFlight(@RequestParam String planeSerialNum, @RequestBody FlightDto flightDto){
+        ResponseContainer responseContainer = flightService.addFlight(planeSerialNum, flightDto);
         return ResponseEntity.status(responseContainer.getStatusCode()).body(responseContainer);
     }
     @PutMapping

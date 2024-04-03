@@ -47,7 +47,6 @@ public class AirplaneService {
         }
         return responseContainer.setCreatedResult("Airplane was created!");
     }
-
     public ResponseContainer movePlane(String companyName, String serialNum) {
         ResponseContainer responseContainer = new ResponseContainer();
         AirCompanyDto foundAirCompany;
