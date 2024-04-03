@@ -1,0 +1,370 @@
+{
+	"info": {
+		"_postman_id": "fa268735-1c74-4a44-a51d-ad6827e97771",
+		"name": "Air Companies Management System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28766369"
+	},
+	"item": [
+		{
+			"name": "createCompany",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"Ukraine Airlines\",\r\n    \"companyType\":\"private\",\r\n    \"foundedAt\":\"1973-05-12\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/airCompany",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"airCompany"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllCompanies",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/airCompany",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"airCompany"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCompanyByName",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/airCompany?name=Alibaba Air",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"airCompany"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Alibaba Air"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateCompany",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"foundedAt\":\"2010-10-15\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/airCompany?companyName=Ukraine Airlines",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"airCompany"
+					],
+					"query": [
+						{
+							"key": "companyName",
+							"value": "Ukraine Airlines"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteCompany",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/airCompany?companyName=Ukraine Airlines",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"airCompany"
+					],
+					"query": [
+						{
+							"key": "companyName",
+							"value": "Ukraine Airlines"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createPlane",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Content-Type is application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate errorMessage is null when error is true\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData.error).to.be.true;\r",
+							"    pm.expect(responseData.errorMessage).to.be.null;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"CreatedAt field is in a valid date format\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData.result.createdAt).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"Douglas DC-2\",\r\n    \"factorySerialNumber\":\"382G\",\r\n    \"numberOfFlights\":0,\r\n    \"flightDistance\":1,\r\n    \"fuelCapacity\":5000,\r\n    \"type\":\"civil\",\r\n    \"createdAt\":\"2022-06-12\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/airplane?companyName=Ukraine Airlines",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"airplane"
+					],
+					"query": [
+						{
+							"key": "companyName",
+							"value": "Ukraine Airlines"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "movePlane",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/airplane?companyName=Ukraine Airlines&serialNum=380G",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"airplane"
+					],
+					"query": [
+						{
+							"key": "companyName",
+							"value": "Ukraine Airlines"
+						},
+						{
+							"key": "serialNum",
+							"value": "380G"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createFlight",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"departureCountry\":\"Ukraine\",\r\n    \"destinationCountry\":\"USA\",\r\n    \"distance\":5000,\r\n    \"estimatedFlightTime\":120\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/flight?companyName=Ukraine Airlines&planeSerialNum=380G",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"flight"
+					],
+					"query": [
+						{
+							"key": "companyName",
+							"value": "Ukraine Airlines"
+						},
+						{
+							"key": "planeSerialNum",
+							"value": "380G"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateFlightStatus",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/flight?id=3&status=COMPLETED",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"flight"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "3"
+						},
+						{
+							"key": "status",
+							"value": "COMPLETED"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCompanyFlightsByStatus",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/flight?companyName=Ukraine Airlines&status=ACTIVE",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"flight"
+					],
+					"query": [
+						{
+							"key": "companyName",
+							"value": "Ukraine Airlines"
+						},
+						{
+							"key": "status",
+							"value": "ACTIVE"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getFlightsByStatus",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/flight?status=PENDING",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"flight"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "PENDING"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTimeUnderratedFlights",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/flight/timeUnderrated",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"flight",
+						"timeUnderrated"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

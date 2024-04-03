@@ -16,9 +16,15 @@ public class FlightMapper {
     }
 
     public Flight fromDto(FlightDto flightDto){
-        return new Flight(flightDto.getId(), flightDto.getFlightStatus(), airCompanyMapper.fromDto(flightDto.getAirCompanyId()),airplaneMapper.fromDto(flightDto.getAirplaneDtoId()),flightDto.getDepartureCountry(),flightDto.getDestinationCountry(),flightDto.getDistance(),flightDto.getEstimatedFlightTime(),flightDto.getStartedAt(),flightDto.getEndedAt(),flightDto.getDelayStartedAt(),flightDto.getCreatedAt());
+        if(ObjectUtils.isEmpty(flightDto.getAirCompanyId())){
+            return new Flight(flightDto.getId(), flightDto.getFlightStatus(), null,airplaneMapper.fromDto(flightDto.getAirplaneId()),flightDto.getDepartureCountry(),flightDto.getDestinationCountry(),flightDto.getDistance(),flightDto.getEstimatedFlightTime(),flightDto.getStartedAt(),flightDto.getEndedAt(),flightDto.getDelayStartedAt(),flightDto.getCreatedAt());
+        }
+        return new Flight(flightDto.getId(), flightDto.getFlightStatus(), airCompanyMapper.fromDto(flightDto.getAirCompanyId()),airplaneMapper.fromDto(flightDto.getAirplaneId()),flightDto.getDepartureCountry(),flightDto.getDestinationCountry(),flightDto.getDistance(),flightDto.getEstimatedFlightTime(),flightDto.getStartedAt(),flightDto.getEndedAt(),flightDto.getDelayStartedAt(),flightDto.getCreatedAt());
     }
     public FlightDto toDto(Flight flight){
+        if(ObjectUtils.isEmpty(flight.getAirCompanyId())){
+            return new FlightDto(flight.getId(), flight.getFlightStatus(), null,airplaneMapper.toDto(flight.getAirplaneId()),flight.getDepartureCountry(), flight.getDestinationCountry(), flight.getDistance(), flight.getEstimatedFlightTime(), flight.getStartedAt(),flight.getEndedAt(),flight.getDelayStartedAt(),flight.getCreatedAt());
+        }
         return new FlightDto(flight.getId(), flight.getFlightStatus(), airCompanyMapper.toDto(flight.getAirCompanyId()),airplaneMapper.toDto(flight.getAirplaneId()),flight.getDepartureCountry(), flight.getDestinationCountry(), flight.getDistance(), flight.getEstimatedFlightTime(), flight.getStartedAt(),flight.getEndedAt(),flight.getDelayStartedAt(),flight.getCreatedAt());
     }
 }

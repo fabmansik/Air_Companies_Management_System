@@ -1,5 +1,7 @@
 package milansomyk.springboothw.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import milansomyk.springboothw.dto.AirCompanyDto;
 import milansomyk.springboothw.dto.AirplaneDto;
 import milansomyk.springboothw.dto.FlightDto;
@@ -15,74 +17,90 @@ import org.springframework.util.StringUtils;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
-
+@RequiredArgsConstructor
 @Service
+@Slf4j
 public class FlightService {
+
     private final FlightRepository flightRepository;
     private final FlightMapper flightMapper;
     private final AirplaneService airplaneService;
     private final AirCompanyService airCompanyService;
 
-    public FlightService(FlightRepository flightRepository, FlightMapper flightMapper, AirplaneService airplaneService, AirCompanyService airCompanyService) {
-        this.flightRepository = flightRepository;
-        this.flightMapper = flightMapper;
-        this.airplaneService = airplaneService;
-        this.airCompanyService = airCompanyService;
-    }
-
     public ResponseContainer addFlight(String companyName, String planeSerialNum, FlightDto flightDto) {
         ResponseContainer responseContainer = new ResponseContainer();
-        if (flightDto.allNull()) {
-            return responseContainer.setErrorMessageAndStatusCode("not full information about flight", HttpStatus.BAD_REQUEST.value());
+        if (flightDto.anyRequiredIsNull()) {
+            log.error("Not enough info about Flight!");
+            return responseContainer.setErrorMessageAndStatusCode("Not enough info about Flight!", HttpStatus.BAD_REQUEST.value());
         }
         if (!StringUtils.hasText(companyName)) {
-            return responseContainer.setErrorMessageAndStatusCode("company name is null!", HttpStatus.BAD_REQUEST.value());
+            log.error("Given AirCompany name is null!");
+            return responseContainer.setErrorMessageAndStatusCode("Given AirCompany name is null!", HttpStatus.BAD_REQUEST.value());
         }
         if (!StringUtils.hasText(planeSerialNum)) {
-            return responseContainer.setErrorMessageAndStatusCode("plane serial number is null!", HttpStatus.BAD_REQUEST.value());
+            log.error("Give Airplane serial number is null!");
+            return responseContainer.setErrorMessageAndStatusCode("Give Airplane serial number is null!", HttpStatus.BAD_REQUEST.value());
         }
-        ResponseContainer bySerialNumber = airplaneService.getBySerialNumber(planeSerialNum);
-        if (bySerialNumber.isError()) return bySerialNumber;
-        ResponseContainer byName = airCompanyService.getByName(companyName);
-        if (byName.isError()) return byName;
+        AirplaneDto foundAirplane;
+        try {
+            foundAirplane = airplaneService.getAirplaneDtoBySerialNumber(planeSerialNum);
+        } catch (IllegalArgumentException e){
+            log.error(e.getMessage());
+            return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.BAD_REQUEST.value());
+        } catch (Exception e){
+            log.error(e.getMessage());
+            return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
+        AirCompanyDto foundAirCompany;
+        try {
+            foundAirCompany = airCompanyService.getAirCompanyByName(companyName);
+        } catch (IllegalArgumentException e){
+            log.error(e.getMessage());
+            return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.BAD_REQUEST.value());
+        } catch (Exception e){
+            log.error(e.getMessage());
+            return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
 
-        flightDto.setAirCompanyId((AirCompanyDto) byName.getResult());
-        flightDto.setAirplaneDtoId((AirplaneDto) bySerialNumber.getResult());
+        flightDto.setAirCompanyId(foundAirCompany);
+        flightDto.setAirplaneId(foundAirplane);
         flightDto.setCreatedAt(LocalDateTime.now());
         flightDto.setFlightStatus(FlightStatus.PENDING);
         flightDto.setStartedAt(null);
-        Flight saved;
+        flightDto.setEndedAt(null);
+        flightDto.setDelayStartedAt(null);
         try {
-            saved = flightRepository.save(flightMapper.fromDto(flightDto));
+            flightRepository.save(flightMapper.fromDto(flightDto));
         } catch (Exception e) {
+            log.error(e.getMessage());
             return responseContainer.setErrorMessageAndStatusCode(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
-        return responseContainer.setSuccessResult(flightMapper.toDto(saved));
+        return responseContainer.setSuccessResult("Flight with this parameters was successfully created!");
     }
-
-    public ResponseContainer updateStatus(Integer id, String status) {
+    public ResponseContainer updateStatus(Integer id, FlightStatus status) {
         ResponseContainer responseContainer = new ResponseContainer();
-        FlightStatus newFlightStatus;
-        if (!Arrays.stream(FlightStatus.values()).map(Enum::toString).toList().contains(status)) {
-            return responseContainer.setErrorMessageAndStatusCode("wrong status used!", HttpStatus.BAD_REQUEST.value());
-        }else{
-            newFlightStatus=FlightStatus.valueOf(status);
+        if(ObjectUtils.isEmpty(id)){
+            log.error("Flight id was not given!");
+            return responseContainer.setErrorMessageAndStatusCode("Flight id was not given!",HttpStatus.BAD_REQUEST.value());
         }
         Flight found;
         try{
             found = flightRepository.findById(id).orElse(null);
         }catch (Exception e){
+            log.error(e.getMessage());
             return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
         if(ObjectUtils.isEmpty(found)){
-            return responseContainer.setErrorMessageAndStatusCode("flight not found!", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            log.error("Flight with this id was not found!");
+            return responseContainer.setErrorMessageAndStatusCode("Flight with this id was not found!", HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
-        if(found.getFlightStatus()==newFlightStatus)
-            return responseContainer.setErrorMessageAndStatusCode("this status already used!", HttpStatus.BAD_REQUEST.value());
+        if(found.getFlightStatus()==status){
+            log.error("This Flight status already in use!");
+            return responseContainer.setErrorMessageAndStatusCode("This Flight status already in use!", HttpStatus.BAD_REQUEST.value());
+        }
         if(found.getFlightStatus()==FlightStatus.PENDING){
-            switch (newFlightStatus){
+            switch (status){
                 case ACTIVE -> {
                     found.setStartedAt(LocalDateTime.now());
                     found.setFlightStatus(FlightStatus.ACTIVE);
@@ -92,43 +110,64 @@ public class FlightService {
                     found.setFlightStatus(FlightStatus.DELAYED);
                 }
                 case COMPLETED -> {
-                    return responseContainer.setErrorMessageAndStatusCode("you can`t change PENDING status to COMPLETED",HttpStatus.BAD_REQUEST.value());
+                    log.error("You can`t change PENDING status to COMPLETED!");
+                    return responseContainer.setErrorMessageAndStatusCode("You can`t change PENDING status to COMPLETED!",HttpStatus.BAD_REQUEST.value());
                 }
             }
         }
         else if(found.getFlightStatus()==FlightStatus.DELAYED){
-            if (newFlightStatus == FlightStatus.ACTIVE) {
+            if (status == FlightStatus.ACTIVE) {
                 found.setStartedAt(LocalDateTime.now());
                 found.setFlightStatus(FlightStatus.ACTIVE);
             }
             else {
-                return responseContainer.setErrorMessageAndStatusCode("you can change DELAYED status to ACTIVE only", HttpStatus.BAD_REQUEST.value());
+                log.error("You can change DELAYED status to ACTIVE only!");
+                return responseContainer.setErrorMessageAndStatusCode("You can change DELAYED status to ACTIVE only!", HttpStatus.BAD_REQUEST.value());
             }
         }
         else if (found.getFlightStatus()==FlightStatus.ACTIVE){
-            if (newFlightStatus == FlightStatus.COMPLETED) {
+            if (status == FlightStatus.COMPLETED) {
                 found.setEndedAt(LocalDateTime.now());
                 found.setFlightStatus(FlightStatus.COMPLETED);
             }
             else {
-                return responseContainer.setErrorMessageAndStatusCode("you can change ACTIVE status to COMPLETED only",HttpStatus.BAD_REQUEST.value());
+                log.error("You can change ACTIVE status to COMPLETED only!");
+                return responseContainer.setErrorMessageAndStatusCode("You can change ACTIVE status to COMPLETED only!",HttpStatus.BAD_REQUEST.value());
             }
         }
-        else return responseContainer.setErrorMessageAndStatusCode("COMPLETED flight status can`t be changed", HttpStatus.BAD_REQUEST.value());
+        else{
+            log.error("COMPLETED flight status can`t be changed!");
+            return responseContainer.setErrorMessageAndStatusCode("COMPLETED flight status can`t be changed!", HttpStatus.BAD_REQUEST.value());
+        }
 
         try {
             flightRepository.save(found);
         } catch (Exception e) {
+            log.error(e.getMessage());
             return responseContainer.setErrorMessageAndStatusCode(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
-        return responseContainer.setSuccessResult("flight status updated!");
+        return responseContainer.setSuccessResult("Flight status updated successfully!");
     }
-    public ResponseContainer getCompanyFlightsByStatus(String companyName, String flightStatus) {
+    public ResponseContainer getCompanyFlightsByStatus(String companyName, FlightStatus flightStatus) {
         ResponseContainer responseContainer = new ResponseContainer();
+        if(!StringUtils.hasText(companyName)){
+            log.error("AirCompany name was not given!");
+            return responseContainer.setErrorMessageAndStatusCode("AirCompany name was not given!", HttpStatus.BAD_REQUEST.value());
+        }
+        try{
+            airCompanyService.getAirCompanyByName(companyName);
+        }catch (IllegalArgumentException e){
+            log.error(e.getMessage());
+            return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.BAD_REQUEST.value());
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return responseContainer.setErrorMessageAndStatusCode(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
         List<Flight> flightList;
         try {
-            flightList = flightRepository.getFlightsByCompanyNameAndFlightStatus(companyName, flightStatus);
+            flightList = flightRepository.getFlightsByCompanyNameAndFlightStatus(companyName, flightStatus.toString());
         }catch (Exception e){
+            log.error(e.getMessage());
             return responseContainer.setErrorMessageAndStatusCode(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
         List<FlightDto> list = flightList.stream().map(flightMapper::toDto).toList();
@@ -140,6 +179,7 @@ public class FlightService {
         try{
             flightsList= flightRepository.getFlightsByFlightStatus(status);
         }catch (Exception e){
+            log.error(e.getMessage());
             return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
         List<FlightDto> list = flightsList.stream().map(flightMapper::toDto).toList();
@@ -151,11 +191,15 @@ public class FlightService {
         try {
             completedFlights = flightRepository.getCompletedFlights();
         } catch (Exception e){
+            log.error(e.getMessage());
             return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
         List<Flight> list = completedFlights.stream()
                 .filter(f -> f.getEstimatedFlightTime() < Duration.between(f.getCreatedAt(), f.getEndedAt()).toSeconds())
                 .toList();
         return responseContainer.setSuccessResult(list);
+    }
+    public void deleteCompanyFromFlight(int companyId){
+        flightRepository.deleteCompanyIdFromFlight(companyId);
     }
 }

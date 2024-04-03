@@ -1,113 +1,41 @@
 package milansomyk.springboothw.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import milansomyk.springboothw.dto.AirCompanyDto;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.stream.Stream;
-
+@RequiredArgsConstructor
+@AllArgsConstructor
+@Data
 public class AirplaneDto {
     @JsonIgnore
     private Integer id;
+    @Min(2)
     private String name;
+    @Min(2)
     private String factorySerialNumber;
     private AirCompanyDto airCompanyId;
+    @PositiveOrZero
     private Integer numberOfFlights;
+    @PositiveOrZero
     private Integer flightDistance;
+    @Positive
     private Integer fuelCapacity;
+    @Min(2)
     private String type;
+    @PastOrPresent
     private LocalDate createdAt;
 
-    public AirplaneDto(Integer id, String name, String factorySerialNumber, AirCompanyDto airCompanyId, Integer numberOfFlights, Integer flightDistance, Integer fuelCapacity, String type, LocalDate createdAt) {
-        this.id = id;
-        this.name = name;
-        this.factorySerialNumber = factorySerialNumber;
-        this.airCompanyId = airCompanyId;
-        this.numberOfFlights = numberOfFlights;
-        this.flightDistance = flightDistance;
-        this.fuelCapacity = fuelCapacity;
-        this.type = type;
-        this.createdAt = createdAt;
+    public boolean anyRequiredIsNull(){
+        return Stream.of(name,factorySerialNumber,fuelCapacity,type,createdAt)
+                .anyMatch(Objects::isNull);
     }
-    public boolean allNull() {
-        return Stream.of(id, name, factorySerialNumber, airCompanyId, numberOfFlights, flightDistance, fuelCapacity, type, createdAt)
-                .allMatch(Objects::isNull);
-    }
-    public AirplaneDto() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getFactorySerialNumber() {
-        return factorySerialNumber;
-    }
-
-    public void setFactorySerialNumber(String factorySerialNumber) {
-        this.factorySerialNumber = factorySerialNumber;
-    }
-
-    public AirCompanyDto getAirCompanyId() {
-        return airCompanyId;
-    }
-
-    public void setAirCompanyId(AirCompanyDto airCompanyId) {
-        this.airCompanyId = airCompanyId;
-    }
-
-    public Integer getNumberOfFlights() {
-        return numberOfFlights;
-    }
-
-    public void setNumberOfFlights(Integer numberOfFlights) {
-        this.numberOfFlights = numberOfFlights;
-    }
-
-    public Integer getFlightDistance() {
-        return flightDistance;
-    }
-
-    public void setFlightDistance(Integer flightDistance) {
-        this.flightDistance = flightDistance;
-    }
-
-    public Integer getFuelCapacity() {
-        return fuelCapacity;
-    }
-
-    public void setFuelCapacity(Integer fuelCapacity) {
-        this.fuelCapacity = fuelCapacity;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public LocalDate getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
-    }
-
-
 }

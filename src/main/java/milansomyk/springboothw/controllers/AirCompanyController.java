@@ -32,13 +32,13 @@ public class AirCompanyController {
         return ResponseEntity.status(responseContainer.getStatusCode()).body(responseContainer);
     }
     @PutMapping
-    public ResponseEntity<ResponseContainer> updateAirCompany(@RequestParam int id, @RequestBody AirCompanyDto airCompanyDto){
-        ResponseContainer responseContainer = airCompanyService.updateAirCompany(id, airCompanyDto);
+    public ResponseEntity<ResponseContainer> updateAirCompany(@RequestParam String companyName, @RequestBody AirCompanyDto airCompanyDto){
+        ResponseContainer responseContainer = airCompanyService.updateAirCompany(companyName, airCompanyDto);
         return ResponseEntity.status(responseContainer.getStatusCode()).body(responseContainer);
     }
     @DeleteMapping
-    public ResponseEntity<ResponseContainer> deleteAirCompany(@RequestParam int id){
-        ResponseContainer responseContainer = airCompanyService.deleteById(id);
+    public ResponseEntity<ResponseContainer> deleteAirCompany(@RequestParam String companyName){
+        ResponseContainer responseContainer = airCompanyService.deleteByCompanyName(companyName);
         return ResponseEntity.status(responseContainer.getStatusCode()).body(responseContainer);
     }
 }

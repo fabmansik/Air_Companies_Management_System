@@ -21,12 +21,12 @@ public class FlightController {
         return ResponseEntity.status(responseContainer.getStatusCode()).body(responseContainer);
     }
     @PutMapping
-    public ResponseEntity<ResponseContainer> updateStatus(@RequestParam Integer id, @RequestParam String status){
+    public ResponseEntity<ResponseContainer> updateStatus(@RequestParam Integer id, @RequestParam FlightStatus status){
         ResponseContainer responseContainer = flightService.updateStatus(id, status);
         return ResponseEntity.status(responseContainer.getStatusCode()).body(responseContainer);
     }
     @GetMapping
-    public ResponseEntity<ResponseContainer> getCompanyFlightsByStatus(@RequestParam String companyName, @RequestParam String status){
+    public ResponseEntity<ResponseContainer> getCompanyFlightsByStatus(@RequestParam String companyName, @RequestParam FlightStatus status){
         ResponseContainer responseContainer = flightService.getCompanyFlightsByStatus(companyName,status);
         return ResponseEntity.status(responseContainer.getStatusCode()).body(responseContainer);
     }

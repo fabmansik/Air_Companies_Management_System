@@ -1,61 +1,34 @@
 package milansomyk.springboothw.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.PastOrPresent;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.stream.Stream;
-
+@RequiredArgsConstructor
+@AllArgsConstructor
+@Data
 public class AirCompanyDto {
     @JsonIgnore
     private Integer id;
+    @Min(2)
     private String name;
+    @Min(2)
     private String companyType;
+    @PastOrPresent
     private LocalDate foundedAt;
-    public AirCompanyDto() {
-    }
-
-    public AirCompanyDto(Integer id, String name, String companyType, LocalDate foundedAt) {
-        this.id = id;
-        this.name = name;
-        this.companyType = companyType;
-        this.foundedAt = foundedAt;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCompanyType() {
-        return companyType;
-    }
-
-    public void setCompanyType(String companyType) {
-        this.companyType = companyType;
-    }
-
-    public LocalDate getFoundedAt() {
-        return foundedAt;
-    }
-
-    public void setFoundedAt(LocalDate foundedAt) {
-        this.foundedAt = foundedAt;
-    }
 
     public boolean allNull() {
         return Stream.of(id, companyType,foundedAt,name)
                 .allMatch(Objects::isNull);
+    }
+    public boolean anyNull(){
+        return Stream.of(companyType,foundedAt,name)
+                .anyMatch(Objects::isNull);
     }
 }
