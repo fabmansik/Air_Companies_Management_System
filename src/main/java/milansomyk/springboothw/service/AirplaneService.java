@@ -10,8 +10,8 @@ import milansomyk.springboothw.mapper.AirplaneMapper;
 import milansomyk.springboothw.repository.AirplaneRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
 @RequiredArgsConstructor
 @Service
 @Slf4j
@@ -22,65 +22,87 @@ public class AirplaneService {
 
     public ResponseContainer createPlane(String companyName, AirplaneDto airplaneDto) {
         ResponseContainer responseContainer = new ResponseContainer();
-        if (airplaneDto.anyRequiredIsNull()) {
-            log.error("Given not enough parameters to create Airplane!");
-            return responseContainer.setErrorMessageAndStatusCode("Given not enough parameters to create Airplane!", HttpStatus.BAD_REQUEST.value());
+        if (airplaneDto == null || airplaneDto.anyRequiredIsNull()) {
+            log.error("Given Airplane is NULL or has empty body!");
+            return responseContainer.setErrorMessageAndStatusCode("Given Airplane is NULL or has empty body!", HttpStatus.BAD_REQUEST.value());
         }
         if (StringUtils.hasText(companyName)) {
-            AirCompanyDto foundAirCompany;
-            try {
-                foundAirCompany = airCompanyService.getAirCompanyByName(companyName);
-            } catch (IllegalArgumentException e){
-                log.error(e.getMessage());
-                return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.BAD_REQUEST.value());
-            }catch (Exception e){
-                log.error(e.getMessage());
-                return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR.value());
-            }
+            ResponseContainer airCompanyByNameResponse = airCompanyService.getAirCompanyByName(companyName);
+            if(airCompanyByNameResponse.isError()) return airCompanyByNameResponse;
+            AirCompanyDto foundAirCompany = (AirCompanyDto) airCompanyByNameResponse.getResult();
             airplaneDto.setAirCompanyId(foundAirCompany);
         }
         try {
             airplaneRepository.save(airplaneMapper.fromDto(airplaneDto));
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("Exception error when trying to save AirCompany by name {}; Error:{}", companyName, e.getMessage());
             return responseContainer.setErrorMessageAndStatusCode(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
         return responseContainer.setCreatedResult("Airplane was created!");
     }
+
     public ResponseContainer movePlane(String companyName, String serialNum) {
         ResponseContainer responseContainer = new ResponseContainer();
-        AirCompanyDto foundAirCompany;
-        if(!StringUtils.hasText(companyName)){
+
+        if (!StringUtils.hasText(companyName)) {
             log.error("Not given AirCompany name!");
-            return responseContainer.setErrorMessageAndStatusCode("Not given AirCompany name!",HttpStatus.BAD_REQUEST.value());
+            return responseContainer.setErrorMessageAndStatusCode("Not given AirCompany name!", HttpStatus.BAD_REQUEST.value());
         }
-        if(!StringUtils.hasText(serialNum)){
+        if (!StringUtils.hasText(serialNum)) {
             log.error("Not given Airplane serial number!");
-            return responseContainer.setErrorMessageAndStatusCode("Not given Airplane serial number!",HttpStatus.BAD_REQUEST.value());
+            return responseContainer.setErrorMessageAndStatusCode("Not given Airplane serial number!", HttpStatus.BAD_REQUEST.value());
         }
-        try{
-            foundAirCompany = airCompanyService.getAirCompanyByName(companyName);
-        }catch (IllegalArgumentException e){
-            log.error(e.getMessage());
-            return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.BAD_REQUEST.value());
-        }catch (Exception e){
-            log.error(e.getMessage());
-            return responseContainer.setErrorMessageAndStatusCode(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR.value());
-        }
-        try{
-            airplaneRepository.updateByFactorySerialNumber(foundAirCompany.getId(), serialNum);
-        }catch (Exception e){
+
+        ResponseContainer airCompanyByNameResponse = airCompanyService.getAirCompanyByName(companyName);
+        if(airCompanyByNameResponse.isError()) return airCompanyByNameResponse;
+        AirCompanyDto foundAirCompany = (AirCompanyDto) airCompanyByNameResponse.getResult();
+        Integer updatedAirplanes;
+        try {
+            updatedAirplanes = airplaneRepository.updateByFactorySerialNumber(foundAirCompany.getId(), serialNum);
+        } catch (Exception e) {
+            log.error("Exception error when trying to update AirPlane by serial number {}; AirCompany id: {}; Error:{}", serialNum, foundAirCompany.getId(), e.getMessage());
             return responseContainer.setErrorMessageAndStatusCode(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
+        if(updatedAirplanes==0){
+            log.error("Airplane with this serial number not found! Serial number: {}",serialNum);
+            return responseContainer.setErrorMessageAndStatusCode("Airplane with this serial number not found!",HttpStatus.BAD_REQUEST.value());
         }
         return responseContainer.setSuccessResult("Airplane moved to another AirCompany successfully!");
     }
-    public AirplaneDto getAirplaneDtoBySerialNumber(String serialNumber){
-        if(!StringUtils.hasText(serialNumber)) throw new IllegalArgumentException("Not given Airplane serial number!");
-        Airplane airplane = airplaneRepository.findByFactorySerialNumber(serialNumber).orElse(null);
-        if(ObjectUtils.isEmpty(airplane)) throw new IllegalArgumentException("Airplane by this serial number was not found!");
-        return airplaneMapper.toDto(airplane);
+
+    public ResponseContainer getAirplaneDtoBySerialNumber(String serialNumber) {
+        ResponseContainer responseContainer = new ResponseContainer();
+        if(!StringUtils.hasText(serialNumber)){
+            log.error("Given serial number is empty!");
+            return responseContainer.setErrorMessageAndStatusCode("Given serial number is empty!",HttpStatus.BAD_REQUEST.value());
+        }
+        Airplane airplane;
+        try{
+            airplane = airplaneRepository.findByFactorySerialNumber(serialNumber).orElse(null);
+        }catch (Exception e){
+            log.error("Exception error when trying to find Airplane by serial number! Serial number: {}; Error: {}",serialNumber, e.getMessage());
+            return responseContainer.setErrorMessageAndStatusCode(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
+        if(airplane==null){
+            log.error("Airplane with this serial number not found! Serial number: {}",serialNumber);
+            return responseContainer.setErrorMessageAndStatusCode("Airplane with this serial number not found!",HttpStatus.BAD_REQUEST.value());
+        }
+        return responseContainer.setSuccessResult(airplaneMapper.toDto(airplane));
     }
-    public void deleteCompanyFromAirplane(int companyId){
-        airplaneRepository.deleteCompanyIdFromAirplane(companyId);
+
+    public ResponseContainer deleteCompanyFromAirplane(Integer companyId) {
+        ResponseContainer responseContainer = new ResponseContainer();
+        if (companyId == null) {
+            log.error("Given AirCompany id is NULL!");
+            return responseContainer.setErrorMessageAndStatusCode("Given AirCompany id is NULL!", HttpStatus.BAD_REQUEST.value());
+        }
+        try {
+            airplaneRepository.deleteCompanyIdFromAirplane(companyId);
+        } catch (Exception e) {
+            log.error("Exception error when trying to delete Company from airplanes; Company id: {}; Error:{}", companyId, e.getMessage());
+            return responseContainer.setErrorMessageAndStatusCode(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
+        return responseContainer;
     }
+
 }

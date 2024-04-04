@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\":\"Ukraine Airlines\",\r\n    \"companyType\":\"private\",\r\n    \"foundedAt\":\"1973-05-12\"\r\n}",
+					"raw": "{\r\n    \"name\":\"Ukraine Airlines\",\r\n    \"companyType\":\"NATIONAL\",\r\n    \"foundedAt\":\"1999-11-10\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -21,11 +21,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/airCompany",
+					"raw": "localhost:8000/airCompany",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8000",
 					"path": [
 						"airCompany"
 					]
@@ -39,11 +39,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/airCompany",
+					"raw": "localhost:8000/airCompany",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8000",
 					"path": [
 						"airCompany"
 					]
@@ -57,17 +57,17 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/airCompany?name=Alibaba Air",
+					"raw": "localhost:8000/airCompany?companyName=Alibaba Air",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8000",
 					"path": [
 						"airCompany"
 					],
 					"query": [
 						{
-							"key": "name",
+							"key": "companyName",
 							"value": "Alibaba Air"
 						}
 					]
@@ -82,7 +82,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"foundedAt\":\"2010-10-15\"\r\n}",
+					"raw": "{\r\n    \"name\":\"Ukraine Airlines\",\r\n    \"companyType\":\"NATIONAL\",\r\n    \"foundedAt\":\"1981-10-05\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -90,11 +90,11 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/airCompany?companyName=Ukraine Airlines",
+					"raw": "localhost:8000/airCompany?companyName=Ukraine Airlines",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8000",
 					"path": [
 						"airCompany"
 					],
@@ -114,11 +114,11 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/airCompany?companyName=Ukraine Airlines",
+					"raw": "localhost:8000/airCompany?companyName=Ukraine Airlines",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8000",
 					"path": [
 						"airCompany"
 					],
@@ -176,7 +176,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\":\"Douglas DC-2\",\r\n    \"factorySerialNumber\":\"382G\",\r\n    \"numberOfFlights\":0,\r\n    \"flightDistance\":1,\r\n    \"fuelCapacity\":5000,\r\n    \"type\":\"civil\",\r\n    \"createdAt\":\"2022-06-12\"\r\n}",
+					"raw": "{\r\n    \"name\":\"Boeing 477\",\r\n    \"factorySerialNumber\":\"257A\",\r\n    \"numberOfFlights\":0,\r\n    \"flightDistance\":1,\r\n    \"fuelCapacity\":10000,\r\n    \"type\":\"PASSENGER\",\r\n    \"createdAt\":\"2000-01-02\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -184,18 +184,18 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/airplane?companyName=Ukraine Airlines",
+					"raw": "localhost:8000/airplane?companyName=British Airlines",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8000",
 					"path": [
 						"airplane"
 					],
 					"query": [
 						{
 							"key": "companyName",
-							"value": "Ukraine Airlines"
+							"value": "British Airlines"
 						}
 					]
 				}
@@ -208,11 +208,11 @@
 				"method": "PUT",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/airplane?companyName=Ukraine Airlines&serialNum=380G",
+					"raw": "localhost:8000/airplane?companyName=Ukraine Airlines&serialNum=257A",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8000",
 					"path": [
 						"airplane"
 					],
@@ -223,7 +223,7 @@
 						},
 						{
 							"key": "serialNum",
-							"value": "380G"
+							"value": "257A"
 						}
 					]
 				}
@@ -237,7 +237,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"departureCountry\":\"Ukraine\",\r\n    \"destinationCountry\":\"USA\",\r\n    \"distance\":5000,\r\n    \"estimatedFlightTime\":120\r\n}",
+					"raw": "{\r\n    \"departureCountry\":\"Istanbul\",\r\n    \"destinationCountry\":\"Brazil\",\r\n    \"distance\":2500,\r\n    \"estimatedFlightTime\":220\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -245,22 +245,18 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/flight?companyName=Ukraine Airlines&planeSerialNum=380G",
+					"raw": "localhost:8000/flight?planeSerialNum=255A",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8000",
 					"path": [
 						"flight"
 					],
 					"query": [
 						{
-							"key": "companyName",
-							"value": "Ukraine Airlines"
-						},
-						{
 							"key": "planeSerialNum",
-							"value": "380G"
+							"value": "255A"
 						}
 					]
 				}
@@ -273,18 +269,18 @@
 				"method": "PUT",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/flight?id=3&status=COMPLETED",
+					"raw": "localhost:8000/flight?id=14&status=COMPLETED",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8000",
 					"path": [
 						"flight"
 					],
 					"query": [
 						{
 							"key": "id",
-							"value": "3"
+							"value": "14"
 						},
 						{
 							"key": "status",
@@ -301,11 +297,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/flight?companyName=Ukraine Airlines&status=ACTIVE",
+					"raw": "localhost:8000/flight?companyName=Ukraine Airlines&status=ACTIVE",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8000",
 					"path": [
 						"flight"
 					],
@@ -329,18 +325,18 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/flight?status=PENDING",
+					"raw": "localhost:8000/flight?status=ACTIVE",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8000",
 					"path": [
 						"flight"
 					],
 					"query": [
 						{
 							"key": "status",
-							"value": "PENDING"
+							"value": "ACTIVE"
 						}
 					]
 				}
@@ -353,11 +349,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/flight/timeUnderrated",
+					"raw": "localhost:8000/flight/timeUnderrated",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8000",
 					"path": [
 						"flight",
 						"timeUnderrated"

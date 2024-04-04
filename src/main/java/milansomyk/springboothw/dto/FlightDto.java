@@ -18,13 +18,11 @@ public class FlightDto {
     private Integer id;
     @Enumerated(EnumType.STRING)
     private FlightStatus flightStatus;
-    @NotNull
     private AirCompanyDto airCompanyId;
-    @NotNull
     private AirplaneDto airplaneId;
-    @Min(2)
+    @Size(min=2)
     private String departureCountry;
-    @Min(2)
+    @Size(min=2)
     private String destinationCountry;
     @PositiveOrZero
     private Integer distance;
@@ -33,7 +31,6 @@ public class FlightDto {
     private LocalDateTime startedAt;
     private LocalDateTime endedAt;
     private LocalDateTime delayStartedAt;
-    @PastOrPresent
     private LocalDateTime createdAt;
 
     public boolean anyRequiredIsNull(){

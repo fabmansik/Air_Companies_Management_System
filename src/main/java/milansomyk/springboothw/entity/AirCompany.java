@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import milansomyk.springboothw.enums.CompanyType;
 
 import java.time.LocalDate;
 @RequiredArgsConstructor
@@ -16,6 +17,7 @@ public class AirCompany {
     private Integer id;
     @Column(unique = true)
     private String name;
-    private String companyType;
+    @Enumerated(EnumType.STRING)
+    private CompanyType companyType;
     private LocalDate foundedAt;
 }

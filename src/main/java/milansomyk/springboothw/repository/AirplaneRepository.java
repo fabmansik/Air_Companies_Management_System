@@ -13,9 +13,9 @@ public interface AirplaneRepository extends JpaRepository<Airplane, Integer> {
     @Transactional
     @Modifying
     @Query(nativeQuery = true, value = "UPDATE airplane SET air_company_id = :companyId WHERE factory_serial_number = :factorySerialNumber")
-    void updateByFactorySerialNumber(Integer companyId, String factorySerialNumber);
+    Integer updateByFactorySerialNumber(Integer companyId, String factorySerialNumber);
     @Transactional
     @Modifying
-    @Query(nativeQuery = true, value = "UPDATE airplane set airplane.air_company_id = null where airplane.air_company_id = :companyId")
+    @Query(nativeQuery = true, value = "UPDATE air_companies_management.airplane SET air_company_id = null WHERE air_company_id = :companyId")
     void deleteCompanyIdFromAirplane(int companyId);
 }

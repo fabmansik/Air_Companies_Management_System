@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import milansomyk.springboothw.enums.AirplaneType;
 
 import java.time.LocalDate;
 @RequiredArgsConstructor
@@ -23,6 +24,7 @@ public class Airplane {
     private Integer numberOfFlights;
     private Integer flightDistance;
     private Integer fuelCapacity;
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private AirplaneType type;
     private LocalDate createdAt;
 }
