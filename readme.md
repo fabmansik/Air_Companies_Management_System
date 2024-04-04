@@ -74,8 +74,8 @@ Once the application is running, you can start using the Flight Management Syste
 | GET         | `/airCompany`            | `@RequestParam companyName`                           | To get a company by name             |
 | PUT         | `/airCompany`            | `@RequestParam companyName`                           | To update a company info by name     |
 | DELETE      | `/airCompany`            | `@RequestParam companyName`                           | To delete a company by name          |
-| POST        | `/airplane`              | `@RequestParam companyName`,`@RequestBody Airplane`   | To create an airplane by name        |
-| PUT         | `/airplane`              | `@RequestParam companyName`,`@RequestParam serialNum` | To delete an airplane by name        |
+| POST        | `/airplane`              | `(Optional) @RequestParam companyName`,`@RequestBody Airplane`   | To create an airplane by airplane's serial number        |
+| PUT         | `/airplane`              | `@RequestParam companyName`,`@RequestParam serialNum` | To update an airplane's owner company by airplane's serial number        |
 | POST        | `/flight`                | `@RequestParam planeSerialNum`,`@RequestBody Flight`  | To create a flight                   |
 | PUT         | `/flight`                | `@RequestParam id`,`@RequestParam status`             | To update a flight                   |
 | GET         | `/flight`                | `@RequestParam companyName`,`@RequestParam status`    | To get all company flights by status |
